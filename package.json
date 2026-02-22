@@ -1,0 +1,12 @@
+{
+  "name": "resumematch-ai",
+  "version": "1.0.0",
+  "description": "Resume & Job Description Matcher — AI-powered compatibility analyzer",
+  "scripts": {
+    "start": "serve . --listen $PORT",
+    "dev": "serve ."
+  },
+  "dependencies": {
+    "serve": "^14.2.1"
+  }
+}
