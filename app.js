@@ -1,5 +1,5 @@
 // ============================================================
-// app.js — Main Entry Point v2 (with all feature integrations)
+// app.js — Main Entry Point v3 (all 9 modules integrated)
 // ============================================================
 
 (function () {
@@ -28,10 +28,18 @@
         });
 
         const resumeTA = document.getElementById('resume-input');
-        resumeTA.addEventListener('input', () => { state.resumeText = resumeTA.value; UI.updateCharCount('resume-input', 'resume-char-count'); updateInputStatus('resume-status', resumeTA.value); });
+        resumeTA.addEventListener('input', () => {
+            state.resumeText = resumeTA.value;
+            UI.updateCharCount('resume-input', 'resume-char-count');
+            updateInputStatus('resume-status', resumeTA.value);
+        });
 
         const jdTA = document.getElementById('jd-input');
-        jdTA.addEventListener('input', () => { state.jdText = jdTA.value; UI.updateCharCount('jd-input', 'jd-char-count'); updateInputStatus('jd-status', jdTA.value); });
+        jdTA.addEventListener('input', () => {
+            state.jdText = jdTA.value;
+            UI.updateCharCount('jd-input', 'jd-char-count');
+            updateInputStatus('jd-status', jdTA.value);
+        });
 
         document.getElementById('resume-file').addEventListener('change', e => handleFileUpload(e, 'resume-input', 'resume-char-count', 'resume-status'));
         document.getElementById('jd-file').addEventListener('change', e => handleFileUpload(e, 'jd-input', 'jd-char-count', 'jd-status'));
@@ -47,17 +55,23 @@
         if (toggle && panel) {
             toggle.addEventListener('click', () => {
                 panel.classList.toggle('open');
-                toggle.textContent = panel.classList.contains('open') ? '▲ Hide Options' : '▼ Customize Analysis';
+                toggle.textContent = panel.classList.contains('open') ? '▲ Hide Options' : '🎛 Customize Analysis';
             });
         }
     }
 
     function getCustomizeOptions() {
-        const roleLevel = document.getElementById('role-level-select')?.value || 'mid';
+        // Role level from radio buttons
+        const roleLevelEl = document.querySelector('input[name="role-level"]:checked');
+        const roleLevel = roleLevelEl ? roleLevelEl.value : 'mid';
+
         const industry = document.getElementById('industry-select')?.value || 'tech';
         const priorityRaw = document.getElementById('priority-skills-input')?.value || '';
         const prioritySkills = priorityRaw.split(',').map(s => s.trim()).filter(Boolean);
-        return { roleLevel, industry, prioritySkills };
+        const targetRole = document.getElementById('target-role-input')?.value.trim() || '';
+        const targetCompany = document.getElementById('target-company-input')?.value.trim() || '';
+
+        return { roleLevel, industry, prioritySkills, targetRole, targetCompany };
     }
 
     // ---- Language Toggle ----
@@ -71,8 +85,16 @@
         state.resumeText = document.getElementById('resume-input').value.trim();
         state.jdText = document.getElementById('jd-input').value.trim();
 
-        if (state.resumeText.length < 50) { showToast('Please enter your resume text (at least 50 characters).'); document.getElementById('resume-input').focus(); return; }
-        if (state.jdText.length < 30) { showToast('Please enter the job description.'); document.getElementById('jd-input').focus(); return; }
+        if (state.resumeText.length < 50) {
+            showToast('Please enter your resume text (at least 50 characters).');
+            document.getElementById('resume-input').focus();
+            return;
+        }
+        if (state.jdText.length < 30) {
+            showToast('Please enter the job description.');
+            document.getElementById('jd-input').focus();
+            return;
+        }
 
         UI.showLoading();
         setTimeout(() => {
@@ -81,6 +103,7 @@
                 state.result = ResumeAnalyzer.analyzeMatch(state.resumeText, state.jdText, options);
                 UI.renderResults(state.result);
                 Feedback.reset();
+                showToast('Analysis complete! 🎉', 'success');
             } catch (err) {
                 console.error('Analysis error:', err);
                 showToast('An error occurred. Please try again.', 'error');
@@ -109,10 +132,20 @@
         const ta = document.getElementById(textareaId);
         if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
             const reader = new FileReader();
-            reader.onload = e => { ta.value = e.target.result; UI.updateCharCount(textareaId, countId); updateInputStatus(statusId, ta.value); showToast('File loaded! ✅', 'success'); };
+            reader.onload = e => {
+                ta.value = e.target.result;
+                UI.updateCharCount(textareaId, countId);
+                updateInputStatus(statusId, ta.value);
+                showToast('File loaded! ✅', 'success');
+            };
             reader.readAsText(file);
         } else if (file.name.endsWith('.pdf')) {
-            extractPdfText(file, text => { ta.value = text; UI.updateCharCount(textareaId, countId); updateInputStatus(statusId, ta.value); showToast('PDF extracted! ✅', 'success'); });
+            extractPdfText(file, text => {
+                ta.value = text;
+                UI.updateCharCount(textareaId, countId);
+                updateInputStatus(statusId, ta.value);
+                showToast('PDF extracted! ✅', 'success');
+            });
         } else {
             showToast('Please upload a .txt or .pdf file.', 'error');
         }
@@ -127,7 +160,11 @@
                 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
                 const pdf = await pdfjsLib.getDocument(new Uint8Array(e.target.result)).promise;
                 let fullText = '';
-                for (let i = 1; i <= pdf.numPages; i++) { const page = await pdf.getPage(i); const content = await page.getTextContent(); fullText += content.items.map(item => item.str).join(' ') + '\n'; }
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const content = await page.getTextContent();
+                    fullText += content.items.map(item => item.str).join(' ') + '\n';
+                }
                 callback(fullText);
             } catch { showToast('Could not parse PDF. Paste text directly.', 'error'); }
         };
@@ -140,7 +177,12 @@
         if (!zone) return;
         zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
         zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-        zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag-over'); const file = e.dataTransfer.files[0]; if (file) handleFileUpload({ target: { files: [file] } }, textareaId, countId, statusId); });
+        zone.addEventListener('drop', e => {
+            e.preventDefault();
+            zone.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            if (file) handleFileUpload({ target: { files: [file] } }, textareaId, countId, statusId);
+        });
     }
 
     // ---- Status Labels ----
@@ -166,8 +208,14 @@
 
     // ---- Nav Scroll ----
     function initNavScroll() {
-        const sections = ['match-score', 'skills', 'verdict', 'resume-tips', 'career-roadmap', 'ats-analysis', 'video-resume', 'feedback-section'];
-        const observer = new IntersectionObserver(entries => { entries.forEach(entry => { if (entry.isIntersecting) UI.setActiveNav(entry.target.id); }); }, { rootMargin: '-40% 0px -40% 0px' });
+        const sections = [
+            'match-score', 'skills', 'strengths-section', 'skills-gap-section',
+            'verdict', 'resume-tips', 'company-opt-section', 'career-roadmap',
+            'ats-analysis', 'interview-section', 'video-resume', 'feedback-section'
+        ];
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => { if (entry.isIntersecting) UI.setActiveNav(entry.target.id); });
+        }, { rootMargin: '-35% 0px -35% 0px' });
         sections.forEach(id => { const el = document.getElementById(id); if (el) observer.observe(el); });
     }
 
@@ -189,7 +237,7 @@
     const SAMPLE_RESUME = `John Doe — Software Developer | 3 Years of Experience
 
 SUMMARY
-Passionate full-stack developer with 3 years of experience building web applications using React, Python, and SQL. Agile teams, strong problem-solving, clean code.
+Passionate full-stack developer with 3 years of experience building web applications using React, Python, and SQL. Agile teams, strong communication, problem-solving, clean code.
 
 SKILLS
 Languages: JavaScript, Python, SQL, HTML5, CSS3
@@ -200,7 +248,7 @@ Other: REST APIs, Agile, Scrum, Unit Testing (Jest), Linux
 
 EXPERIENCE
 Frontend Developer — TechStart Inc. | 2022 – Present
-- Built React web apps serving 10,000+ users
+- Built React web apps serving 10,000+ daily users
 - Reduced page load time by 40% via code splitting
 - Integrated REST APIs, managed state with Redux
 
@@ -230,7 +278,8 @@ REQUIREMENTS:
     function loadSampleData() {
         document.getElementById('resume-input').value = SAMPLE_RESUME;
         document.getElementById('jd-input').value = SAMPLE_JD;
-        state.resumeText = SAMPLE_RESUME; state.jdText = SAMPLE_JD;
+        state.resumeText = SAMPLE_RESUME;
+        state.jdText = SAMPLE_JD;
         UI.updateCharCount('resume-input', 'resume-char-count');
         UI.updateCharCount('jd-input', 'jd-char-count');
         updateInputStatus('resume-status', SAMPLE_RESUME);
@@ -239,4 +288,5 @@ REQUIREMENTS:
     }
 
     window.AppState = state;
+    window.showToast = showToast;
 })();

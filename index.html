@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ResumeMatch AI — Smart Resume & Job Description Analyzer</title>
+  <title>ResumeMatch AI — Smart Resume &amp; Job Description Analyzer</title>
   <meta name="description"
-    content="Analyze your resume against any job description. Get an ATS match score, skill gap analysis, resume tips, career roadmap, and video resume support — instantly." />
+    content="Analyze your resume against any job description. Get an ATS match score, skill gap analysis, resume tips, career roadmap, interview prep, and video resume support — instantly." />
   <link rel="stylesheet" href="styles.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
@@ -38,11 +38,12 @@
         <span data-i18n="heroTitle2">Before You Apply</span>
       </h2>
       <p data-i18n="heroSubtitle">Paste your resume and any job description to get an instant compatibility score, skill
-        gap analysis, ATS keyword insights, and a personalized career roadmap.</p>
+        gap analysis, ATS keyword insights, interview prep, and a personalized career roadmap.</p>
       <div class="hero-stats">
+        <div class="hero-stat"><strong>9</strong><span>Analysis Modules</span></div>
         <div class="hero-stat"><strong>150+</strong><span data-i18n="stat1Label">Skills Tracked</span></div>
         <div class="hero-stat"><strong>0–100</strong><span data-i18n="stat2Label">ATS Match Score</span></div>
-        <div class="hero-stat"><strong>100%</strong><span data-i18n="stat3Label">Private & Offline</span></div>
+        <div class="hero-stat"><strong>100%</strong><span data-i18n="stat3Label">Private &amp; Offline</span></div>
         <div class="hero-stat"><strong>Free</strong><span data-i18n="stat4Label">No Sign-up Needed</span></div>
       </div>
     </section>
@@ -63,7 +64,7 @@
         </div>
         <div class="drop-zone" id="resume-drop">
           <textarea id="resume-input" data-i18n="resumePlaceholder"
-            placeholder="Paste your full resume text here...&#10;&#10;Include: Skills, Experience, Projects, Education&#10;&#10;(Or drag & drop a .txt or .pdf file)"
+            placeholder="Paste your full resume text here...&#10;&#10;Include: Skills, Experience, Projects, Education&#10;&#10;(Or drag &amp; drop a .txt or .pdf file)"
             spellcheck="false"></textarea>
         </div>
         <div class="input-footer">
@@ -86,7 +87,7 @@
         </div>
         <div class="drop-zone" id="jd-drop">
           <textarea id="jd-input" data-i18n="jdPlaceholder"
-            placeholder="Paste the full job description here...&#10;&#10;Include: Requirements, Responsibilities, Skills&#10;&#10;(Or drag & drop a .txt or .pdf file)"
+            placeholder="Paste the full job description here...&#10;&#10;Include: Requirements, Responsibilities, Skills&#10;&#10;(Or drag &amp; drop a .txt or .pdf file)"
             spellcheck="false"></textarea>
         </div>
         <div class="input-footer">
@@ -140,6 +141,18 @@
             <input type="text" id="priority-skills-input" data-i18n="prioritySkillsPlaceholder"
               placeholder="e.g. React, Docker, Python" />
           </div>
+
+          <!-- Target Role -->
+          <div class="customize-field">
+            <label>Target Role (Optional)</label>
+            <input type="text" id="target-role-input" placeholder="e.g. Senior Full Stack Developer" />
+          </div>
+
+          <!-- Target Company -->
+          <div class="customize-field">
+            <label>Target Company (Optional)</label>
+            <input type="text" id="target-company-input" placeholder="e.g. Google, Swiggy, Startup" />
+          </div>
         </div>
       </div>
     </div>
@@ -173,25 +186,29 @@
         <!-- Side Nav -->
         <nav class="side-nav">
           <h4>Navigation</h4>
-          <a href="#match-score" class="active" data-i18n="navScore">📊 Match Score</a>
-          <a href="#skills" data-i18n="navSkills">🧬 Skills</a>
-          <a href="#verdict" data-i18n="navVerdict">🏆 Verdict</a>
-          <a href="#resume-tips" data-i18n="navTips">🛠 Tips</a>
-          <a href="#career-roadmap" data-i18n="navRoadmap">🚀 Roadmap</a>
-          <a href="#ats-analysis" data-i18n="navATS">🤖 ATS</a>
-          <a href="#video-resume" data-i18n="navVideo">📹 Video</a>
-          <a href="#feedback-section" data-i18n="navFeedback">⭐ Feedback</a>
+          <a href="#match-score" class="active">📊 Match Score</a>
+          <a href="#skills">🧬 Skills</a>
+          <a href="#strengths-section">🏆 Strengths</a>
+          <a href="#skills-gap-section">🎯 Skills Gap</a>
+          <a href="#verdict">✅ Verdict</a>
+          <a href="#resume-tips">🛠 Tips</a>
+          <a href="#company-opt-section">🏢 Company Fit</a>
+          <a href="#career-roadmap">🚀 Roadmap</a>
+          <a href="#ats-analysis">🤖 ATS</a>
+          <a href="#interview-section">💬 Interview</a>
+          <a href="#video-resume">📹 Soft Skills</a>
+          <a href="#feedback-section">⭐ Feedback</a>
         </nav>
 
         <!-- Results Grid -->
         <div class="results-grid">
 
-          <!-- MATCH SCORE CARD -->
+          <!-- ===== MODULE 1: MATCH SCORE CARD ===== -->
           <div class="result-card" id="match-score">
             <div class="card-header">
               <div class="card-icon purple-bg">📊</div>
               <div>
-                <h3 data-i18n="scoreTitle">Match Score Analysis</h3>
+                <h3 data-i18n="scoreTitle">Smart Match Score Analysis</h3>
                 <p data-i18n="scoreSubtitle">Overall compatibility with the job description</p>
               </div>
             </div>
@@ -222,6 +239,18 @@
                     <div class="bar-fill"></div>
                   </div>
                 </div>
+                <div class="score-bar-row" id="bar-edu">
+                  <div class="bar-meta"><span>Education Fit</span><span class="bar-num">—</span></div>
+                  <div class="bar-track">
+                    <div class="bar-fill"></div>
+                  </div>
+                </div>
+                <div class="score-bar-row" id="bar-project">
+                  <div class="bar-meta"><span>Project Relevance</span><span class="bar-num">—</span></div>
+                  <div class="bar-track">
+                    <div class="bar-fill"></div>
+                  </div>
+                </div>
                 <div class="score-bar-row" id="bar-domain">
                   <div class="bar-meta"><span data-i18n="barDomain">Domain Alignment</span><span
                       class="bar-num">—</span></div>
@@ -240,7 +269,7 @@
             <div class="exp-info-box" id="exp-info"></div>
           </div>
 
-          <!-- SKILLS CARD -->
+          <!-- ===== MODULE 2 (PART A): SKILLS BREAKDOWN CARD ===== -->
           <div class="result-card" id="skills">
             <div class="card-header">
               <div class="card-icon green-bg">🧬</div>
@@ -287,10 +316,34 @@
             </div>
           </div>
 
-          <!-- VERDICT CARD -->
-          <div class="result-card" id="verdict">
+          <!-- ===== MODULE 1 (PART B): STRENGTHS & WEAKNESSES ===== -->
+          <div class="result-card" id="strengths-section">
             <div class="card-header">
               <div class="card-icon yellow-bg">🏆</div>
+              <div>
+                <h3>Strengths &amp; Improvement Areas</h3>
+                <p>Your top 3 strengths and 3 areas needing work</p>
+              </div>
+            </div>
+            <div id="strengths-weaknesses"></div>
+          </div>
+
+          <!-- ===== MODULE 2 (PART B): SKILLS GAP & PRIORITY ===== -->
+          <div class="result-card" id="skills-gap-section">
+            <div class="card-header">
+              <div class="card-icon red-bg">🎯</div>
+              <div>
+                <h3>Skills Gap &amp; Priority Analysis</h3>
+                <p>Missing skills ranked by importance to this job</p>
+              </div>
+            </div>
+            <div id="skills-gap-container"></div>
+          </div>
+
+          <!-- ===== MODULE 9: VERDICT CARD ===== -->
+          <div class="result-card" id="verdict">
+            <div class="card-header">
+              <div class="card-icon green-bg">✅</div>
               <div>
                 <h3 data-i18n="verdictTitle">Final Verdict</h3>
                 <p data-i18n="verdictSubtitle">Your overall readiness for this role</p>
@@ -303,9 +356,15 @@
                 <div class="verdict-sub">Results will appear here.</div>
               </div>
             </div>
+            <!-- Immediate Next Actions -->
+            <div style="margin-top:24px">
+              <h4 style="font-size:14px;font-weight:700;margin-bottom:14px;color:var(--cyan-light)">⚡ Immediate Next
+                Actions</h4>
+              <div id="next-actions-container"></div>
+            </div>
           </div>
 
-          <!-- RESUME TIPS CARD -->
+          <!-- ===== MODULE 5: RESUME IMPROVEMENT TIPS ===== -->
           <div class="result-card" id="resume-tips">
             <div class="card-header">
               <div class="card-icon cyan-bg">🛠</div>
@@ -317,85 +376,133 @@
             <div id="tips-container"></div>
           </div>
 
-          <!-- CAREER ROADMAP CARD -->
+          <!-- ===== MODULE 4: COMPANY & ROLE OPTIMIZATION ===== -->
+          <div class="result-card" id="company-opt-section">
+            <div class="card-header">
+              <div class="card-icon pink-bg">🏢</div>
+              <div>
+                <h3>Company &amp; Role-Specific Optimization</h3>
+                <p>Resume tone, structure, and content aligned to your target company</p>
+              </div>
+            </div>
+            <div id="company-opt-container"></div>
+          </div>
+
+          <!-- ===== MODULE 6: CAREER ROADMAP (3 PHASES) ===== -->
           <div class="result-card" id="career-roadmap">
             <div class="card-header">
               <div class="card-icon pink-bg">🚀</div>
               <div>
                 <h3 data-i18n="roadmapTitle">Career Growth Roadmap</h3>
-                <p data-i18n="roadmapSubtitle">Your short-term actions and long-term goals</p>
+                <p data-i18n="roadmapSubtitle">Your 12-month plan to reach the next level</p>
               </div>
             </div>
-            <div class="roadmap-grid">
-              <div class="roadmap-panel short">
-                <h4 data-i18n="shortTermLabel">⚡ Short-Term (Next 4–8 Weeks)</h4>
-                <div id="short-term-list"></div>
+
+            <!-- Next Roles -->
+            <div style="margin-bottom:24px">
+              <h4
+                style="font-size:13px;font-weight:700;color:var(--text-muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px">
+                🚀 Possible Next Roles for You</h4>
+              <div id="next-roles-list" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+            </div>
+
+            <!-- 3-Phase Roadmap Tabs -->
+            <div class="tabs-container">
+              <div class="tabs">
+                <button class="tab-btn active" data-tab="roadmap-tab-1">⚡ 0–3 Months</button>
+                <button class="tab-btn" data-tab="roadmap-tab-2">🌱 3–6 Months</button>
+                <button class="tab-btn" data-tab="roadmap-tab-3">🌟 6–12 Months</button>
               </div>
-              <div class="roadmap-panel long">
-                <h4 data-i18n="longTermLabel">🌟 Long-Term (Next 3–6 Months)</h4>
-                <div id="long-term-list"></div>
+              <div class="tab-panel active" id="roadmap-tab-1">
+                <div id="phase1-list"></div>
+              </div>
+              <div class="tab-panel" id="roadmap-tab-2">
+                <div id="phase2-list"></div>
+              </div>
+              <div class="tab-panel" id="roadmap-tab-3">
+                <div id="phase3-list"></div>
               </div>
             </div>
           </div>
 
-          <!-- ATS ANALYSIS CARD -->
+          <!-- ===== MODULE 3: ATS ANALYSIS ===== -->
           <div class="result-card" id="ats-analysis">
             <div class="card-header">
               <div class="card-icon red-bg">🤖</div>
               <div>
-                <h3 data-i18n="atsTitle">ATS Keyword Analysis</h3>
-                <p data-i18n="atsSubtitle">Green = found in resume · Red = missing</p>
+                <h3 data-i18n="atsTitle">ATS Compatibility &amp; Keyword Analysis</h3>
+                <p data-i18n="atsSubtitle">Simulated ATS scan · Green = found · Red = missing</p>
               </div>
             </div>
-            <div class="ats-legend">
-              <div class="legend-item">
-                <div class="legend-dot found"></div><span data-i18n="atsLegendFound">Found in your resume</span>
+            <!-- ATS Pass/Fail + Format risks + Tips -->
+            <div id="ats-analysis-container"></div>
+            <!-- Keyword Pills -->
+            <div style="margin-top:20px">
+              <h4
+                style="font-size:13px;font-weight:700;color:var(--text-muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px">
+                📋 Top JD Keywords</h4>
+              <div class="ats-legend">
+                <div class="legend-item">
+                  <div class="legend-dot found"></div><span data-i18n="atsLegendFound">Found in your resume</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-dot missing"></div><span data-i18n="atsLegendMissing">Missing — add these!</span>
+                </div>
               </div>
-              <div class="legend-item">
-                <div class="legend-dot missing"></div><span data-i18n="atsLegendMissing">Missing — add these!</span>
-              </div>
-            </div>
-            <div id="ats-keywords"></div>
-            <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);">
-              <p style="font-size:13px;color:var(--text-muted);line-height:1.7">
-                💡 <strong style="color:var(--text-secondary)" data-i18n="atsTip">ATS Tip: Copy-paste the exact red
-                  keywords from the job description into your resume (in context). Most ATS systems do exact keyword
-                  matching!</strong>
-              </p>
+              <div id="ats-keywords"></div>
             </div>
           </div>
 
-          <!-- VIDEO RESUME CARD -->
+          <!-- ===== MODULE 7: INTERVIEW PREPARATION ===== -->
+          <div class="result-card" id="interview-section">
+            <div class="card-header">
+              <div class="card-icon purple-bg">💬</div>
+              <div>
+                <h3>Interview Preparation Insights</h3>
+                <p>Role-specific questions predicted from your resume &amp; JD</p>
+              </div>
+            </div>
+            <div id="interview-container"></div>
+          </div>
+
+          <!-- ===== MODULE 8: VIDEO RESUME & SOFT SKILLS ===== -->
           <div class="result-card" id="video-resume">
             <div class="card-header">
               <div class="card-icon purple-bg">📹</div>
               <div>
-                <h3 data-i18n="videoTitle">Video Resume</h3>
-                <p data-i18n="videoSubtitle">Add a 30-second video pitch to stand out</p>
+                <h3 data-i18n="videoTitle">Video Resume &amp; Soft Skills</h3>
+                <p data-i18n="videoSubtitle">How to present yourself + soft skills coaching</p>
               </div>
             </div>
-            <video id="video-player" controls></video>
-            <div class="video-upload-zone">
-              <div id="video-placeholder">
-                <div class="video-emoji">🎬</div>
-                <p>Upload a video or record directly from your webcam</p>
+            <!-- Soft Skills Tips (rendered by JS) -->
+            <div id="soft-skills-container"></div>
+            <!-- Video Recording Section -->
+            <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border)">
+              <h4 style="font-size:14px;font-weight:700;margin-bottom:16px;color:var(--cyan-light)">🎬 Record Your
+                60-Second Video Resume</h4>
+              <video id="video-player" controls></video>
+              <div class="video-upload-zone">
+                <div id="video-placeholder">
+                  <div class="video-emoji">🎬</div>
+                  <p>Upload a video or record directly from your webcam</p>
+                </div>
+                <div class="video-actions">
+                  <label class="btn-video btn-video-upload">
+                    <span data-i18n="videoUploadBtn">📂 Upload Video</span>
+                    <input type="file" id="video-upload-input" accept="video/*" style="display:none" />
+                  </label>
+                  <button class="btn-video btn-video-record" id="video-record-btn" data-i18n="videoRecordBtn">🔴 Record
+                    Now</button>
+                </div>
               </div>
-              <div class="video-actions">
-                <label class="btn-video btn-video-upload">
-                  <span data-i18n="videoUploadBtn">📂 Upload Video</span>
-                  <input type="file" id="video-upload-input" accept="video/*" style="display:none" />
-                </label>
-                <button class="btn-video btn-video-record" id="video-record-btn" data-i18n="videoRecordBtn">🔴 Record
-                  Now</button>
+              <div id="video-info"></div>
+              <div class="video-tip" data-i18n="videoTip">
+                💡 Tip: Introduce yourself, mention your top 3 skills, and why you're excited about this role!
               </div>
-            </div>
-            <div id="video-info"></div>
-            <div class="video-tip" data-i18n="videoTip">
-              💡 Tip: Introduce yourself, mention your top 3 skills, and why you're excited about this role!
             </div>
           </div>
 
-          <!-- FEEDBACK & RATING CARD -->
+          <!-- ===== FEEDBACK & RATING CARD ===== -->
           <div class="result-card" id="feedback-section">
             <div class="card-header">
               <div class="card-icon yellow-bg">⭐</div>
