@@ -37,508 +37,683 @@
         <span data-i18n="heroTitle1">Know Your</span> <span class="grad" data-i18n="heroGrad">Match Score</span><br />
         <span data-i18n="heroTitle2">Before You Apply</span>
       </h2>
-      <p data-i18n="heroSubtitle">Paste your resume and any job description to get an instant compatibility score, skill
-        gap analysis, ATS keyword insights, interview prep, and a personalized career roadmap.</p>
-      <div class="hero-stats">
-        <div class="hero-stat"><strong>9</strong><span>Analysis Modules</span></div>
-        <div class="hero-stat"><strong>150+</strong><span data-i18n="stat1Label">Skills Tracked</span></div>
-        <div class="hero-stat"><strong>0–100</strong><span data-i18n="stat2Label">ATS Match Score</span></div>
-        <div class="hero-stat"><strong>100%</strong><span data-i18n="stat3Label">Private &amp; Offline</span></div>
-        <div class="hero-stat"><strong>Free</strong><span data-i18n="stat4Label">No Sign-up Needed</span></div>
-      </div>
+      <p data-i18n="heroSubtitle">Paste your resume and any job description to get an instant AI-powered analysis —
+        free, private, and instant.</p>
     </section>
 
-    <!-- ===== INPUT SECTION ===== -->
-    <section class="input-section">
-      <!-- Resume Panel -->
-      <div class="input-panel">
-        <div class="panel-header">
-          <div class="panel-label">
-            <div class="panel-icon purple">📄</div>
-            <span data-i18n="resumeLabel">Your Resume</span>
+    <!-- ===== TOOL TAB BAR ===== -->
+    <div class="tool-tabs-bar">
+      <button class="tool-tab active" id="tab-btn-matcher" onclick="switchTool('matcher')">
+        <span class="tool-tab-icon">📄</span>
+        <div class="tool-tab-text">
+          <span class="tool-tab-title">Resume Matcher</span>
+          <span class="tool-tab-sub">Match your resume to a job</span>
+        </div>
+      </button>
+      <button class="tool-tab" id="tab-btn-risk" onclick="switchTool('risk')">
+        <span class="tool-tab-icon">⚠️</span>
+        <div class="tool-tab-text">
+          <span class="tool-tab-title">Career Risk IQ</span>
+          <span class="tool-tab-sub">Check long-term career health</span>
+        </div>
+      </button>
+    </div>
+
+    <!-- ===== MATCHER TOOL PANEL ===== -->
+    <div id="matcher-tool-panel">
+
+      <!-- ===== HOW IT WORKS ===== -->
+      <div class="how-it-works">
+        <div class="hiw-step">
+          <div class="hiw-num">①</div>
+          <div class="hiw-icon">📄</div>
+          <div class="hiw-text">
+            <strong>Paste Your Resume</strong>
+            <span>Copy-paste plain text or upload a .txt/.pdf file</span>
           </div>
-          <label class="file-upload-btn">
-            <span data-i18n="uploadBtn">⬆ Upload File</span>
-            <input type="file" id="resume-file" accept=".txt,.pdf" />
-          </label>
         </div>
-        <div class="drop-zone" id="resume-drop">
-          <textarea id="resume-input" data-i18n="resumePlaceholder"
-            placeholder="Paste your full resume text here...&#10;&#10;Include: Skills, Experience, Projects, Education&#10;&#10;(Or drag &amp; drop a .txt or .pdf file)"
-            spellcheck="false"></textarea>
+        <div class="hiw-arrow">→</div>
+        <div class="hiw-step">
+          <div class="hiw-num">②</div>
+          <div class="hiw-icon">💼</div>
+          <div class="hiw-text">
+            <strong>Add Job Description</strong>
+            <span>Paste from LinkedIn, Indeed, or any job posting</span>
+          </div>
         </div>
-        <div class="input-footer">
-          <span class="char-count" id="resume-char-count">0 characters</span>
-          <span class="input-status" id="resume-status"></span>
+        <div class="hiw-arrow">→</div>
+        <div class="hiw-step">
+          <div class="hiw-num">③</div>
+          <div class="hiw-icon">🔍</div>
+          <div class="hiw-text">
+            <strong>Get Your Score</strong>
+            <span>Instant match score, skill gaps &amp; roadmap</span>
+          </div>
         </div>
       </div>
 
-      <!-- JD Panel -->
-      <div class="input-panel">
-        <div class="panel-header">
-          <div class="panel-label">
-            <div class="panel-icon cyan">💼</div>
-            <span data-i18n="jdLabel">Job Description</span>
+      <!-- ===== INPUT SECTION ===== -->
+      <section class="input-section">
+        <!-- Resume Panel -->
+        <div class="input-panel">
+          <div class="panel-header">
+            <div class="panel-label">
+              <div class="step-badge">①</div>
+              <div class="panel-icon purple">📄</div>
+              <span data-i18n="resumeLabel">Your Resume</span>
+            </div>
+            <label class="file-upload-btn">
+              <span data-i18n="uploadBtn">⬆ Upload File</span>
+              <input type="file" id="resume-file" accept=".txt,.pdf" />
+            </label>
           </div>
-          <label class="file-upload-btn">
-            <span data-i18n="uploadBtn">⬆ Upload File</span>
-            <input type="file" id="jd-file" accept=".txt,.pdf" />
-          </label>
+          <div class="drop-zone" id="resume-drop">
+            <textarea id="resume-input" data-i18n="resumePlaceholder"
+              placeholder="Paste your resume here — Skills, Experience, Projects, Education...&#10;&#10;(Or drag &amp; drop a .txt or .pdf file)"
+              spellcheck="false"></textarea>
+          </div>
+          <div class="input-footer">
+            <span class="char-count" id="resume-char-count">0 characters</span>
+            <span class="input-status" id="resume-status"></span>
+          </div>
+          <div class="input-tip">💡 Copy-paste from Word, Google Docs, or upload a PDF</div>
         </div>
-        <div class="drop-zone" id="jd-drop">
-          <textarea id="jd-input" data-i18n="jdPlaceholder"
-            placeholder="Paste the full job description here...&#10;&#10;Include: Requirements, Responsibilities, Skills&#10;&#10;(Or drag &amp; drop a .txt or .pdf file)"
-            spellcheck="false"></textarea>
-        </div>
-        <div class="input-footer">
-          <span class="char-count" id="jd-char-count">0 characters</span>
-          <span class="input-status" id="jd-status"></span>
-        </div>
-      </div>
-    </section>
 
-    <!-- ===== AI CUSTOMIZATION PANEL ===== -->
-    <div class="customize-wrap">
-      <button class="customize-toggle-btn" id="customize-toggle" data-i18n="customizeTitle">🎛 Customize
-        Analysis</button>
-      <div class="customize-panel" id="customize-panel">
-        <div class="customize-grid">
-          <!-- Role Level -->
-          <div class="customize-field">
-            <label data-i18n="roleLevelLabel">Target Role Level</label>
-            <div class="role-radio-group">
-              <input type="radio" name="role-level" id="role-entry" class="role-radio" value="entry">
-              <label for="role-entry" class="role-label" data-i18n="roleEntry">Entry</label>
-              <input type="radio" name="role-level" id="role-mid" class="role-radio" value="mid" checked>
-              <label for="role-mid" class="role-label" data-i18n="roleMid">Mid</label>
-              <input type="radio" name="role-level" id="role-senior" class="role-radio" value="senior">
-              <label for="role-senior" class="role-label" data-i18n="roleSenior">Senior</label>
-              <input type="radio" name="role-level" id="role-lead" class="role-radio" value="lead">
-              <label for="role-lead" class="role-label" data-i18n="roleLead">Lead</label>
-              <input type="radio" name="role-level" id="role-exec" class="role-radio" value="exec">
-              <label for="role-exec" class="role-label" data-i18n="roleExec">C-Suite</label>
+        <!-- JD Panel -->
+        <div class="input-panel">
+          <div class="panel-header">
+            <div class="panel-label">
+              <div class="step-badge step-badge-cyan">②</div>
+              <div class="panel-icon cyan">💼</div>
+              <span data-i18n="jdLabel">Job Description</span>
+            </div>
+            <label class="file-upload-btn">
+              <span data-i18n="uploadBtn">⬆ Upload File</span>
+              <input type="file" id="jd-file" accept=".txt,.pdf" />
+            </label>
+          </div>
+          <div class="drop-zone" id="jd-drop">
+            <textarea id="jd-input" data-i18n="jdPlaceholder"
+              placeholder="Paste the job description here — Requirements, Skills, Responsibilities...&#10;&#10;(Or drag &amp; drop a .txt or .pdf file)"
+              spellcheck="false"></textarea>
+          </div>
+          <div class="input-footer">
+            <span class="char-count" id="jd-char-count">0 characters</span>
+            <span class="input-status" id="jd-status"></span>
+          </div>
+          <div class="input-tip">💡 Paste directly from LinkedIn, Indeed, or any job board</div>
+        </div>
+      </section>
+
+      <!-- ===== AI CUSTOMIZATION PANEL ===== -->
+      <div class="customize-wrap">
+        <button class="customize-toggle-btn" id="customize-toggle">🎛 Fine-tune Analysis <span
+            class="optional-badge">Optional</span> <span class="chevron-toggle">▼</span></button>
+        <div class="customize-panel" id="customize-panel">
+          <div class="customize-grid">
+            <!-- Role Level -->
+            <div class="customize-field">
+              <label data-i18n="roleLevelLabel">Target Role Level</label>
+              <div class="role-radio-group">
+                <input type="radio" name="role-level" id="role-entry" class="role-radio" value="entry">
+                <label for="role-entry" class="role-label" data-i18n="roleEntry">Entry</label>
+                <input type="radio" name="role-level" id="role-mid" class="role-radio" value="mid" checked>
+                <label for="role-mid" class="role-label" data-i18n="roleMid">Mid</label>
+                <input type="radio" name="role-level" id="role-senior" class="role-radio" value="senior">
+                <label for="role-senior" class="role-label" data-i18n="roleSenior">Senior</label>
+                <input type="radio" name="role-level" id="role-lead" class="role-radio" value="lead">
+                <label for="role-lead" class="role-label" data-i18n="roleLead">Lead</label>
+                <input type="radio" name="role-level" id="role-exec" class="role-radio" value="exec">
+                <label for="role-exec" class="role-label" data-i18n="roleExec">C-Suite</label>
+              </div>
+            </div>
+
+            <!-- Industry -->
+            <div class="customize-field">
+              <label data-i18n="industryLabel">Industry Focus</label>
+              <select id="industry-select">
+                <option value="tech" data-i18n="industryTech">Technology</option>
+                <option value="finance" data-i18n="industryFinance">Finance</option>
+                <option value="health" data-i18n="industryHealth">Healthcare</option>
+                <option value="marketing" data-i18n="industryMarketing">Marketing</option>
+                <option value="education" data-i18n="industryEducation">Education</option>
+                <option value="design" data-i18n="industryDesign">Design / Creative</option>
+                <option value="data" data-i18n="industryData">Data Science / AI</option>
+                <option value="other" data-i18n="industryOther">Other</option>
+              </select>
+            </div>
+
+            <!-- Priority Skills -->
+            <div class="customize-field">
+              <label data-i18n="prioritySkillsLabel">Priority Skills</label>
+              <input type="text" id="priority-skills-input" data-i18n="prioritySkillsPlaceholder"
+                placeholder="e.g. React, Docker, Python" />
+            </div>
+
+            <!-- Target Role -->
+            <div class="customize-field">
+              <label>Target Role (Optional)</label>
+              <input type="text" id="target-role-input" placeholder="e.g. Senior Full Stack Developer" />
+            </div>
+
+            <!-- Target Company -->
+            <div class="customize-field">
+              <label>Target Company (Optional)</label>
+              <input type="text" id="target-company-input" placeholder="e.g. Google, Swiggy, Startup" />
             </div>
           </div>
-
-          <!-- Industry -->
-          <div class="customize-field">
-            <label data-i18n="industryLabel">Industry Focus</label>
-            <select id="industry-select">
-              <option value="tech" data-i18n="industryTech">Technology</option>
-              <option value="finance" data-i18n="industryFinance">Finance</option>
-              <option value="health" data-i18n="industryHealth">Healthcare</option>
-              <option value="marketing" data-i18n="industryMarketing">Marketing</option>
-              <option value="education" data-i18n="industryEducation">Education</option>
-              <option value="design" data-i18n="industryDesign">Design / Creative</option>
-              <option value="data" data-i18n="industryData">Data Science / AI</option>
-              <option value="other" data-i18n="industryOther">Other</option>
-            </select>
-          </div>
-
-          <!-- Priority Skills -->
-          <div class="customize-field">
-            <label data-i18n="prioritySkillsLabel">Priority Skills</label>
-            <input type="text" id="priority-skills-input" data-i18n="prioritySkillsPlaceholder"
-              placeholder="e.g. React, Docker, Python" />
-          </div>
-
-          <!-- Target Role -->
-          <div class="customize-field">
-            <label>Target Role (Optional)</label>
-            <input type="text" id="target-role-input" placeholder="e.g. Senior Full Stack Developer" />
-          </div>
-
-          <!-- Target Company -->
-          <div class="customize-field">
-            <label>Target Company (Optional)</label>
-            <input type="text" id="target-company-input" placeholder="e.g. Google, Swiggy, Startup" />
-          </div>
         </div>
       </div>
-    </div>
 
-    <!-- ===== ACTION BAR ===== -->
-    <div class="action-bar">
-      <button class="btn-primary" id="analyze-btn">
-        <span>🔍</span> <span data-i18n="analyzeBtn">Analyze Match</span>
-      </button>
-      <button class="btn-sample" id="load-sample-btn">
-        <span data-i18n="sampleBtn">🧪 Try Sample Data</span>
-      </button>
-      <button class="btn-secondary" id="clear-btn">
-        <span data-i18n="clearBtn">🗑 Clear All</span>
-      </button>
-    </div>
-
-    <!-- ===== RESULTS SECTION ===== -->
-    <section id="results-section" class="hidden">
-
-      <!-- Results Header with Download -->
-      <div class="results-header">
-        <h2>📋 Analysis Results</h2>
-        <button class="btn-download" id="download-btn">
-          📥 <span data-i18n="downloadBtn">Download Report</span>
+      <!-- ===== ACTION BAR ===== -->
+      <div class="action-bar">
+        <button class="btn-primary" id="analyze-btn">
+          <span>🔍</span> <span data-i18n="analyzeBtn">Analyze Match</span>
+        </button>
+        <button class="btn-sample" id="load-sample-btn">
+          <span>🧪 Try Sample Data</span>
+          <span class="sample-hint">— no data needed!</span>
+        </button>
+        <button class="btn-secondary" id="clear-btn">
+          <span data-i18n="clearBtn">🗑 Clear</span>
         </button>
       </div>
 
-      <div class="main-content">
+      <!-- Sticky mobile analyze bar -->
+      <div class="sticky-analyze-bar" id="sticky-analyze-bar">
+        <button class="btn-primary" onclick="document.getElementById('analyze-btn').click()">
+          🔍 Analyze Match
+        </button>
+      </div>
 
-        <!-- Side Nav -->
-        <nav class="side-nav">
-          <h4>Navigation</h4>
-          <a href="#match-score" class="active">📊 Match Score</a>
-          <a href="#skills">🧬 Skills</a>
-          <a href="#strengths-section">🏆 Strengths</a>
-          <a href="#skills-gap-section">🎯 Skills Gap</a>
-          <a href="#verdict">✅ Verdict</a>
-          <a href="#resume-tips">🛠 Tips</a>
-          <a href="#company-opt-section">🏢 Company Fit</a>
-          <a href="#career-roadmap">🚀 Roadmap</a>
-          <a href="#ats-analysis">🤖 ATS</a>
-          <a href="#interview-section">💬 Interview</a>
-          <a href="#video-resume">📹 Soft Skills</a>
-          <a href="#feedback-section">⭐ Feedback</a>
-        </nav>
+      <!-- ===== RESULTS SECTION ===== -->
+      <section id="results-section" class="hidden">
 
-        <!-- Results Grid -->
-        <div class="results-grid">
+        <!-- Results Header with Download -->
+        <div class="results-header">
+          <div>
+            <h2>📋 Your Analysis Results</h2>
+            <p class="results-subtitle">Scroll through the sections below, or click any item in the left nav to jump
+              there.</p>
+          </div>
+          <button class="btn-download" id="download-btn">
+            📥 <span data-i18n="downloadBtn">Download Report</span>
+          </button>
+        </div>
 
-          <!-- ===== MODULE 1: MATCH SCORE CARD ===== -->
-          <div class="result-card" id="match-score">
-            <div class="card-header">
-              <div class="card-icon purple-bg">📊</div>
-              <div>
-                <h3 data-i18n="scoreTitle">Smart Match Score Analysis</h3>
-                <p data-i18n="scoreSubtitle">Overall compatibility with the job description</p>
+        <div class="main-content">
+
+          <!-- Side Nav -->
+          <nav class="side-nav">
+            <h4>Jump To</h4>
+            <a href="#quick-summary" class="active">⚡ Quick Summary</a>
+            <a href="#match-score">📊 Match Score</a>
+            <a href="#skills">🧬 Skills</a>
+            <a href="#verdict">✅ Verdict</a>
+            <a href="#resume-tips">🛠 Tips</a>
+            <a href="#career-roadmap">🚀 Roadmap</a>
+            <a href="#ats-analysis">🤖 ATS</a>
+            <a href="#interview-section">💬 Interview</a>
+            <a href="#feedback-section">⭐ Feedback</a>
+          </nav>
+
+          <!-- Results Grid -->
+          <div class="results-grid">
+
+            <!-- ===== TL;DR QUICK SUMMARY CARD ===== -->
+            <div class="result-card tldr-card" id="quick-summary">
+              <div class="card-header">
+                <div class="card-icon" style="background:rgba(16,185,129,0.15)">⚡</div>
+                <div>
+                  <h3>Quick Summary</h3>
+                  <p>Your analysis at a glance — scroll down for full details</p>
+                </div>
               </div>
+              <div id="tldr-container"></div>
             </div>
-            <div class="score-display">
-              <div class="score-ring-wrap">
-                <svg width="140" height="140" viewBox="0 0 140 140">
-                  <circle cx="70" cy="70" r="54" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="12" />
-                  <circle cx="70" cy="70" r="54" fill="none" stroke="#8b5cf6" stroke-width="12" stroke-linecap="round"
-                    id="score-ring-circle" style="stroke-dasharray:339.29;stroke-dashoffset:339.29;" />
-                </svg>
-                <div class="score-text-overlay">
-                  <span class="score-number" id="score-number">0%</span>
-                  <span id="score-label">Analyzing...</span>
+
+            <!-- ===== MODULE 1: MATCH SCORE CARD ===== -->
+            <div class="result-card" id="match-score">
+              <div class="card-header">
+                <div class="card-icon purple-bg">📊</div>
+                <div>
+                  <h3 data-i18n="scoreTitle">Smart Match Score Analysis</h3>
+                  <p data-i18n="scoreSubtitle">Overall compatibility with the job description</p>
                 </div>
               </div>
-              <div class="score-bars">
-                <div class="score-bar-row" id="bar-skills">
-                  <div class="bar-meta"><span data-i18n="barSkills">Skills Match</span><span class="bar-num">—</span>
-                  </div>
-                  <div class="bar-track">
-                    <div class="bar-fill"></div>
-                  </div>
-                </div>
-                <div class="score-bar-row" id="bar-exp">
-                  <div class="bar-meta"><span data-i18n="barExp">Experience Fit</span><span class="bar-num">—</span>
-                  </div>
-                  <div class="bar-track">
-                    <div class="bar-fill"></div>
-                  </div>
-                </div>
-                <div class="score-bar-row" id="bar-edu">
-                  <div class="bar-meta"><span>Education Fit</span><span class="bar-num">—</span></div>
-                  <div class="bar-track">
-                    <div class="bar-fill"></div>
-                  </div>
-                </div>
-                <div class="score-bar-row" id="bar-project">
-                  <div class="bar-meta"><span>Project Relevance</span><span class="bar-num">—</span></div>
-                  <div class="bar-track">
-                    <div class="bar-fill"></div>
-                  </div>
-                </div>
-                <div class="score-bar-row" id="bar-domain">
-                  <div class="bar-meta"><span data-i18n="barDomain">Domain Alignment</span><span
-                      class="bar-num">—</span></div>
-                  <div class="bar-track">
-                    <div class="bar-fill"></div>
+              <div class="score-display">
+                <div class="score-ring-wrap">
+                  <svg width="140" height="140" viewBox="0 0 140 140">
+                    <circle cx="70" cy="70" r="54" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="12" />
+                    <circle cx="70" cy="70" r="54" fill="none" stroke="#8b5cf6" stroke-width="12" stroke-linecap="round"
+                      id="score-ring-circle" style="stroke-dasharray:339.29;stroke-dashoffset:339.29;" />
+                  </svg>
+                  <div class="score-text-overlay">
+                    <span class="score-number" id="score-number">0%</span>
+                    <span id="score-label">Analyzing...</span>
                   </div>
                 </div>
-                <div class="score-bar-row" id="bar-ats">
-                  <div class="bar-meta"><span data-i18n="barATS">ATS Keywords</span><span class="bar-num">—</span></div>
-                  <div class="bar-track">
-                    <div class="bar-fill"></div>
+                <div class="score-bars">
+                  <div class="score-bar-row" id="bar-skills">
+                    <div class="bar-meta"><span data-i18n="barSkills">Skills Match</span><span class="bar-num">—</span>
+                    </div>
+                    <div class="bar-track">
+                      <div class="bar-fill"></div>
+                    </div>
+                  </div>
+                  <div class="score-bar-row" id="bar-exp">
+                    <div class="bar-meta"><span data-i18n="barExp">Experience Fit</span><span class="bar-num">—</span>
+                    </div>
+                    <div class="bar-track">
+                      <div class="bar-fill"></div>
+                    </div>
+                  </div>
+                  <div class="score-bar-row" id="bar-edu">
+                    <div class="bar-meta"><span>Education Fit</span><span class="bar-num">—</span></div>
+                    <div class="bar-track">
+                      <div class="bar-fill"></div>
+                    </div>
+                  </div>
+                  <div class="score-bar-row" id="bar-project">
+                    <div class="bar-meta"><span>Project Relevance</span><span class="bar-num">—</span></div>
+                    <div class="bar-track">
+                      <div class="bar-fill"></div>
+                    </div>
+                  </div>
+                  <div class="score-bar-row" id="bar-domain">
+                    <div class="bar-meta"><span data-i18n="barDomain">Domain Alignment</span><span
+                        class="bar-num">—</span></div>
+                    <div class="bar-track">
+                      <div class="bar-fill"></div>
+                    </div>
+                  </div>
+                  <div class="score-bar-row" id="bar-ats">
+                    <div class="bar-meta"><span data-i18n="barATS">ATS Keywords</span><span class="bar-num">—</span>
+                    </div>
+                    <div class="bar-track">
+                      <div class="bar-fill"></div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="exp-info-box" id="exp-info"></div>
-          </div>
-
-          <!-- ===== MODULE 2 (PART A): SKILLS BREAKDOWN CARD ===== -->
-          <div class="result-card" id="skills">
-            <div class="card-header">
-              <div class="card-icon green-bg">🧬</div>
-              <div>
-                <h3 data-i18n="skillsTitle">Skill Breakdown</h3>
-                <p data-i18n="skillsSubtitle">How your skills compare with the job requirements</p>
-              </div>
-            </div>
-            <div class="skill-summary-row">
-              <div class="skill-stat green"><strong id="strong-count">—</strong><span>✅ <span
-                    data-i18n="strongCount">Matched</span></span></div>
-              <div class="skill-stat yellow"><strong id="partial-count">—</strong><span>⚠️ <span
-                    data-i18n="partialCount">Partial</span></span></div>
-              <div class="skill-stat red"><strong id="missing-count">—</strong><span>❌ <span
-                    data-i18n="missingCount">Missing</span></span></div>
-            </div>
-            <div class="tabs-container">
-              <div class="tabs">
-                <button class="tab-btn active" data-tab="tab-matched" data-i18n="tabMatched">✅ Matched</button>
-                <button class="tab-btn" data-tab="tab-partial" data-i18n="tabPartial">⚠️ Partial</button>
-                <button class="tab-btn" data-tab="tab-missing" data-i18n="tabMissing">❌ Missing</button>
-                <button class="tab-btn" data-tab="tab-extra" data-i18n="tabBonus">⭐ Bonus</button>
-              </div>
-              <div class="tab-panel active" id="tab-matched">
-                <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Skills found in both your resume
-                  and the job description:</p>
-                <div class="pills-grid" id="strong-skills-list"></div>
-              </div>
-              <div class="tab-panel" id="tab-partial">
-                <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Related skills that partially match
-                  — highlight these better:</p>
-                <div class="pills-grid" id="partial-skills-list"></div>
-              </div>
-              <div class="tab-panel" id="tab-missing">
-                <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">JD skills not found in your resume
-                  — learn or add them:</p>
-                <div class="pills-grid" id="missing-skills-list"></div>
-              </div>
-              <div class="tab-panel" id="tab-extra">
-                <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Extra skills that can differentiate
-                  you from other candidates:</p>
-                <div class="pills-grid" id="extra-skills-list"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- ===== MODULE 1 (PART B): STRENGTHS & WEAKNESSES ===== -->
-          <div class="result-card" id="strengths-section">
-            <div class="card-header">
-              <div class="card-icon yellow-bg">🏆</div>
-              <div>
-                <h3>Strengths &amp; Improvement Areas</h3>
-                <p>Your top 3 strengths and 3 areas needing work</p>
-              </div>
-            </div>
-            <div id="strengths-weaknesses"></div>
-          </div>
-
-          <!-- ===== MODULE 2 (PART B): SKILLS GAP & PRIORITY ===== -->
-          <div class="result-card" id="skills-gap-section">
-            <div class="card-header">
-              <div class="card-icon red-bg">🎯</div>
-              <div>
-                <h3>Skills Gap &amp; Priority Analysis</h3>
-                <p>Missing skills ranked by importance to this job</p>
-              </div>
-            </div>
-            <div id="skills-gap-container"></div>
-          </div>
-
-          <!-- ===== MODULE 9: VERDICT CARD ===== -->
-          <div class="result-card" id="verdict">
-            <div class="card-header">
-              <div class="card-icon green-bg">✅</div>
-              <div>
-                <h3 data-i18n="verdictTitle">Final Verdict</h3>
-                <p data-i18n="verdictSubtitle">Your overall readiness for this role</p>
-              </div>
-            </div>
-            <div id="verdict-badge" class="verdict-badge verdict-improve">
-              <span class="verdict-icon">⏳</span>
-              <div>
-                <div class="verdict-title">Analyzing...</div>
-                <div class="verdict-sub">Results will appear here.</div>
-              </div>
-            </div>
-            <!-- Immediate Next Actions -->
-            <div style="margin-top:24px">
-              <h4 style="font-size:14px;font-weight:700;margin-bottom:14px;color:var(--cyan-light)">⚡ Immediate Next
-                Actions</h4>
-              <div id="next-actions-container"></div>
-            </div>
-          </div>
-
-          <!-- ===== MODULE 5: RESUME IMPROVEMENT TIPS ===== -->
-          <div class="result-card" id="resume-tips">
-            <div class="card-header">
-              <div class="card-icon cyan-bg">🛠</div>
-              <div>
-                <h3 data-i18n="tipsTitle">Resume Improvement Tips</h3>
-                <p data-i18n="tipsSubtitle">Personalized suggestions to increase your match score</p>
-              </div>
-            </div>
-            <div id="tips-container"></div>
-          </div>
-
-          <!-- ===== MODULE 4: COMPANY & ROLE OPTIMIZATION ===== -->
-          <div class="result-card" id="company-opt-section">
-            <div class="card-header">
-              <div class="card-icon pink-bg">🏢</div>
-              <div>
-                <h3>Company &amp; Role-Specific Optimization</h3>
-                <p>Resume tone, structure, and content aligned to your target company</p>
-              </div>
-            </div>
-            <div id="company-opt-container"></div>
-          </div>
-
-          <!-- ===== MODULE 6: CAREER ROADMAP (3 PHASES) ===== -->
-          <div class="result-card" id="career-roadmap">
-            <div class="card-header">
-              <div class="card-icon pink-bg">🚀</div>
-              <div>
-                <h3 data-i18n="roadmapTitle">Career Growth Roadmap</h3>
-                <p data-i18n="roadmapSubtitle">Your 12-month plan to reach the next level</p>
-              </div>
+              <div class="exp-info-box" id="exp-info"></div>
             </div>
 
-            <!-- Next Roles -->
-            <div style="margin-bottom:24px">
-              <h4
-                style="font-size:13px;font-weight:700;color:var(--text-muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px">
-                🚀 Possible Next Roles for You</h4>
-              <div id="next-roles-list" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
-            </div>
-
-            <!-- 3-Phase Roadmap Tabs -->
-            <div class="tabs-container">
-              <div class="tabs">
-                <button class="tab-btn active" data-tab="roadmap-tab-1">⚡ 0–3 Months</button>
-                <button class="tab-btn" data-tab="roadmap-tab-2">🌱 3–6 Months</button>
-                <button class="tab-btn" data-tab="roadmap-tab-3">🌟 6–12 Months</button>
-              </div>
-              <div class="tab-panel active" id="roadmap-tab-1">
-                <div id="phase1-list"></div>
-              </div>
-              <div class="tab-panel" id="roadmap-tab-2">
-                <div id="phase2-list"></div>
-              </div>
-              <div class="tab-panel" id="roadmap-tab-3">
-                <div id="phase3-list"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- ===== MODULE 3: ATS ANALYSIS ===== -->
-          <div class="result-card" id="ats-analysis">
-            <div class="card-header">
-              <div class="card-icon red-bg">🤖</div>
-              <div>
-                <h3 data-i18n="atsTitle">ATS Compatibility &amp; Keyword Analysis</h3>
-                <p data-i18n="atsSubtitle">Simulated ATS scan · Green = found · Red = missing</p>
-              </div>
-            </div>
-            <!-- ATS Pass/Fail + Format risks + Tips -->
-            <div id="ats-analysis-container"></div>
-            <!-- Keyword Pills -->
-            <div style="margin-top:20px">
-              <h4
-                style="font-size:13px;font-weight:700;color:var(--text-muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px">
-                📋 Top JD Keywords</h4>
-              <div class="ats-legend">
-                <div class="legend-item">
-                  <div class="legend-dot found"></div><span data-i18n="atsLegendFound">Found in your resume</span>
-                </div>
-                <div class="legend-item">
-                  <div class="legend-dot missing"></div><span data-i18n="atsLegendMissing">Missing — add these!</span>
+            <!-- ===== MODULE 2 (PART A): SKILLS BREAKDOWN CARD ===== -->
+            <div class="result-card" id="skills">
+              <div class="card-header">
+                <div class="card-icon green-bg">🧬</div>
+                <div>
+                  <h3 data-i18n="skillsTitle">Skill Breakdown</h3>
+                  <p data-i18n="skillsSubtitle">How your skills compare with the job requirements</p>
                 </div>
               </div>
-              <div id="ats-keywords"></div>
-            </div>
-          </div>
-
-          <!-- ===== MODULE 7: INTERVIEW PREPARATION ===== -->
-          <div class="result-card" id="interview-section">
-            <div class="card-header">
-              <div class="card-icon purple-bg">💬</div>
-              <div>
-                <h3>Interview Preparation Insights</h3>
-                <p>Role-specific questions predicted from your resume &amp; JD</p>
+              <div class="skill-summary-row">
+                <div class="skill-stat green"><strong id="strong-count">—</strong><span>✅ <span
+                      data-i18n="strongCount">Matched</span></span></div>
+                <div class="skill-stat yellow"><strong id="partial-count">—</strong><span>⚠️ <span
+                      data-i18n="partialCount">Partial</span></span></div>
+                <div class="skill-stat red"><strong id="missing-count">—</strong><span>❌ <span
+                      data-i18n="missingCount">Missing</span></span></div>
               </div>
-            </div>
-            <div id="interview-container"></div>
-          </div>
-
-          <!-- ===== MODULE 8: VIDEO RESUME & SOFT SKILLS ===== -->
-          <div class="result-card" id="video-resume">
-            <div class="card-header">
-              <div class="card-icon purple-bg">📹</div>
-              <div>
-                <h3 data-i18n="videoTitle">Video Resume &amp; Soft Skills</h3>
-                <p data-i18n="videoSubtitle">How to present yourself + soft skills coaching</p>
-              </div>
-            </div>
-            <!-- Soft Skills Tips (rendered by JS) -->
-            <div id="soft-skills-container"></div>
-            <!-- Video Recording Section -->
-            <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border)">
-              <h4 style="font-size:14px;font-weight:700;margin-bottom:16px;color:var(--cyan-light)">🎬 Record Your
-                60-Second Video Resume</h4>
-              <video id="video-player" controls></video>
-              <div class="video-upload-zone">
-                <div id="video-placeholder">
-                  <div class="video-emoji">🎬</div>
-                  <p>Upload a video or record directly from your webcam</p>
+              <div class="tabs-container">
+                <div class="tabs">
+                  <button class="tab-btn active" data-tab="tab-matched" data-i18n="tabMatched">✅ Matched</button>
+                  <button class="tab-btn" data-tab="tab-partial" data-i18n="tabPartial">⚠️ Partial</button>
+                  <button class="tab-btn" data-tab="tab-missing" data-i18n="tabMissing">❌ Missing</button>
+                  <button class="tab-btn" data-tab="tab-extra" data-i18n="tabBonus">⭐ Bonus</button>
                 </div>
-                <div class="video-actions">
-                  <label class="btn-video btn-video-upload">
-                    <span data-i18n="videoUploadBtn">📂 Upload Video</span>
-                    <input type="file" id="video-upload-input" accept="video/*" style="display:none" />
-                  </label>
-                  <button class="btn-video btn-video-record" id="video-record-btn" data-i18n="videoRecordBtn">🔴 Record
-                    Now</button>
+                <div class="tab-panel active" id="tab-matched">
+                  <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Skills found in both your resume
+                    and the job description:</p>
+                  <div class="pills-grid" id="strong-skills-list"></div>
+                </div>
+                <div class="tab-panel" id="tab-partial">
+                  <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Related skills that partially
+                    match
+                    — highlight these better:</p>
+                  <div class="pills-grid" id="partial-skills-list"></div>
+                </div>
+                <div class="tab-panel" id="tab-missing">
+                  <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">JD skills not found in your
+                    resume
+                    — learn or add them:</p>
+                  <div class="pills-grid" id="missing-skills-list"></div>
+                </div>
+                <div class="tab-panel" id="tab-extra">
+                  <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">Extra skills that can
+                    differentiate
+                    you from other candidates:</p>
+                  <div class="pills-grid" id="extra-skills-list"></div>
                 </div>
               </div>
-              <div id="video-info"></div>
-              <div class="video-tip" data-i18n="videoTip">
-                💡 Tip: Introduce yourself, mention your top 3 skills, and why you're excited about this role!
+            </div>
+
+            <!-- ===== MODULE 1 (PART B): STRENGTHS & WEAKNESSES ===== -->
+            <div class="result-card" id="strengths-section">
+              <div class="card-header">
+                <div class="card-icon yellow-bg">🏆</div>
+                <div>
+                  <h3>Strengths &amp; Improvement Areas</h3>
+                  <p>Your top 3 strengths and 3 areas needing work</p>
+                </div>
+              </div>
+              <div id="strengths-weaknesses"></div>
+            </div>
+
+            <!-- ===== MODULE 2 (PART B): SKILLS GAP & PRIORITY ===== -->
+            <div class="result-card" id="skills-gap-section">
+              <div class="card-header">
+                <div class="card-icon red-bg">🎯</div>
+                <div>
+                  <h3>Skills Gap &amp; Priority Analysis</h3>
+                  <p>Missing skills ranked by importance to this job</p>
+                </div>
+              </div>
+              <div id="skills-gap-container"></div>
+            </div>
+
+            <!-- ===== MODULE 9: VERDICT CARD ===== -->
+            <div class="result-card" id="verdict">
+              <div class="card-header">
+                <div class="card-icon green-bg">✅</div>
+                <div>
+                  <h3 data-i18n="verdictTitle">Final Verdict</h3>
+                  <p data-i18n="verdictSubtitle">Your overall readiness for this role</p>
+                </div>
+              </div>
+              <div id="verdict-badge" class="verdict-badge verdict-improve">
+                <span class="verdict-icon">⏳</span>
+                <div>
+                  <div class="verdict-title">Analyzing...</div>
+                  <div class="verdict-sub">Results will appear here.</div>
+                </div>
+              </div>
+              <!-- Immediate Next Actions -->
+              <div style="margin-top:24px">
+                <h4 style="font-size:14px;font-weight:700;margin-bottom:14px;color:var(--cyan-light)">⚡ Immediate Next
+                  Actions</h4>
+                <div id="next-actions-container"></div>
               </div>
             </div>
+
+            <!-- ===== MODULE 5: RESUME IMPROVEMENT TIPS ===== -->
+            <div class="result-card" id="resume-tips">
+              <div class="card-header">
+                <div class="card-icon cyan-bg">🛠</div>
+                <div>
+                  <h3 data-i18n="tipsTitle">Resume Improvement Tips</h3>
+                  <p data-i18n="tipsSubtitle">Personalized suggestions to increase your match score</p>
+                </div>
+              </div>
+              <div id="tips-container"></div>
+            </div>
+
+            <!-- ===== MODULE 4: COMPANY & ROLE OPTIMIZATION ===== -->
+            <div class="result-card" id="company-opt-section">
+              <div class="card-header">
+                <div class="card-icon pink-bg">🏢</div>
+                <div>
+                  <h3>Company &amp; Role-Specific Optimization</h3>
+                  <p>Resume tone, structure, and content aligned to your target company</p>
+                </div>
+              </div>
+              <div id="company-opt-container"></div>
+            </div>
+
+            <!-- ===== MODULE 6: CAREER ROADMAP (3 PHASES) ===== -->
+            <div class="result-card" id="career-roadmap">
+              <div class="card-header">
+                <div class="card-icon pink-bg">🚀</div>
+                <div>
+                  <h3 data-i18n="roadmapTitle">Career Growth Roadmap</h3>
+                  <p data-i18n="roadmapSubtitle">Your 12-month plan to reach the next level</p>
+                </div>
+              </div>
+
+              <!-- Next Roles -->
+              <div style="margin-bottom:24px">
+                <h4
+                  style="font-size:13px;font-weight:700;color:var(--text-muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px">
+                  🚀 Possible Next Roles for You</h4>
+                <div id="next-roles-list" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+              </div>
+
+              <!-- 3-Phase Roadmap Tabs -->
+              <div class="tabs-container">
+                <div class="tabs">
+                  <button class="tab-btn active" data-tab="roadmap-tab-1">⚡ 0–3 Months</button>
+                  <button class="tab-btn" data-tab="roadmap-tab-2">🌱 3–6 Months</button>
+                  <button class="tab-btn" data-tab="roadmap-tab-3">🌟 6–12 Months</button>
+                </div>
+                <div class="tab-panel active" id="roadmap-tab-1">
+                  <div id="phase1-list"></div>
+                </div>
+                <div class="tab-panel" id="roadmap-tab-2">
+                  <div id="phase2-list"></div>
+                </div>
+                <div class="tab-panel" id="roadmap-tab-3">
+                  <div id="phase3-list"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ===== MODULE 3: ATS ANALYSIS ===== -->
+            <div class="result-card" id="ats-analysis">
+              <div class="card-header">
+                <div class="card-icon red-bg">🤖</div>
+                <div>
+                  <h3 data-i18n="atsTitle">ATS Compatibility &amp; Keyword Analysis</h3>
+                  <p data-i18n="atsSubtitle">Simulated ATS scan · Green = found · Red = missing</p>
+                </div>
+              </div>
+              <!-- ATS Pass/Fail + Format risks + Tips -->
+              <div id="ats-analysis-container"></div>
+              <!-- Keyword Pills -->
+              <div style="margin-top:20px">
+                <h4
+                  style="font-size:13px;font-weight:700;color:var(--text-muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px">
+                  📋 Top JD Keywords</h4>
+                <div class="ats-legend">
+                  <div class="legend-item">
+                    <div class="legend-dot found"></div><span data-i18n="atsLegendFound">Found in your resume</span>
+                  </div>
+                  <div class="legend-item">
+                    <div class="legend-dot missing"></div><span data-i18n="atsLegendMissing">Missing — add these!</span>
+                  </div>
+                </div>
+                <div id="ats-keywords"></div>
+              </div>
+            </div>
+
+            <!-- ===== MODULE 7: INTERVIEW PREPARATION ===== -->
+            <div class="result-card" id="interview-section">
+              <div class="card-header">
+                <div class="card-icon purple-bg">💬</div>
+                <div>
+                  <h3>Interview Preparation Insights</h3>
+                  <p>Role-specific questions predicted from your resume &amp; JD</p>
+                </div>
+              </div>
+              <div id="interview-container"></div>
+            </div>
+
+            <!-- ===== MODULE 8: VIDEO RESUME & SOFT SKILLS ===== -->
+            <div class="result-card" id="video-resume">
+              <div class="card-header">
+                <div class="card-icon purple-bg">📹</div>
+                <div>
+                  <h3 data-i18n="videoTitle">Video Resume &amp; Soft Skills</h3>
+                  <p data-i18n="videoSubtitle">How to present yourself + soft skills coaching</p>
+                </div>
+              </div>
+              <!-- Soft Skills Tips (rendered by JS) -->
+              <div id="soft-skills-container"></div>
+              <!-- Video Recording Section -->
+              <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border)">
+                <h4 style="font-size:14px;font-weight:700;margin-bottom:16px;color:var(--cyan-light)">🎬 Record Your
+                  60-Second Video Resume</h4>
+                <video id="video-player" controls></video>
+                <div class="video-upload-zone">
+                  <div id="video-placeholder">
+                    <div class="video-emoji">🎬</div>
+                    <p>Upload a video or record directly from your webcam</p>
+                  </div>
+                  <div class="video-actions">
+                    <label class="btn-video btn-video-upload">
+                      <span data-i18n="videoUploadBtn">📂 Upload Video</span>
+                      <input type="file" id="video-upload-input" accept="video/*" style="display:none" />
+                    </label>
+                    <button class="btn-video btn-video-record" id="video-record-btn" data-i18n="videoRecordBtn">🔴
+                      Record
+                      Now</button>
+                  </div>
+                </div>
+                <div id="video-info"></div>
+                <div class="video-tip" data-i18n="videoTip">
+                  💡 Tip: Introduce yourself, mention your top 3 skills, and why you're excited about this role!
+                </div>
+              </div>
+            </div>
+
+            <!-- ===== FEEDBACK & RATING CARD ===== -->
+            <div class="result-card" id="feedback-section">
+              <div class="card-header">
+                <div class="card-icon yellow-bg">⭐</div>
+                <div>
+                  <h3 data-i18n="feedbackTitle">Rate This Analysis</h3>
+                  <p data-i18n="feedbackSubtitle">Help us improve! How accurate was this analysis?</p>
+                </div>
+              </div>
+              <div class="feedback-stats">
+                <span id="feedback-count">0 ratings so far</span>
+                <span id="feedback-avg"></span>
+              </div>
+
+              <div id="feedback-form">
+                <div class="star-row">
+                  <button class="star-btn" data-value="1">⭐</button>
+                  <button class="star-btn" data-value="2">⭐</button>
+                  <button class="star-btn" data-value="3">⭐</button>
+                  <button class="star-btn" data-value="4">⭐</button>
+                  <button class="star-btn" data-value="5">⭐</button>
+                </div>
+                <textarea class="feedback-textarea" id="feedback-text" data-i18n="feedbackPlaceholder"
+                  placeholder="Any comments or suggestions? (optional)"></textarea>
+                <button class="btn-feedback-submit" id="feedback-submit-btn" data-i18n="feedbackSubmit">Submit
+                  Feedback</button>
+              </div>
+
+              <div id="feedback-thanks">
+                <div class="thanks-icon">🙏</div>
+                <p data-i18n="feedbackThanks">Thanks for your feedback!</p>
+              </div>
+            </div>
+
+          </div><!-- /.results-grid -->
+        </div><!-- /.main-content -->
+      </section>
+
+    </div><!-- /#matcher-tool-panel -->
+
+    <!-- ===== CAREER RISK TOOL PANEL ===== -->
+    <div id="risk-tool-panel" class="hidden">
+
+      <!-- ===== CAREER RISK INTELLIGENCE SECTION ===== -->
+      <section id="career-risk-section" class="career-risk-section">
+        <div class="career-risk-header">
+          <div class="career-risk-eyebrow">🛡 NEW MODULE</div>
+          <h2>⚠️ AI Career Risk <span class="grad">Intelligence System</span></h2>
+          <p>Predict long-term career stagnation risk based on skill trends, learning patterns, and market alignment.
+            Get
+            early warning signals and actionable recovery strategies.</p>
+        </div>
+
+        <!-- Input Form -->
+        <div class="career-risk-form-card">
+          <div class="risk-form-grid">
+
+            <!-- Current Role -->
+            <div class="risk-field">
+              <label for="cri-role">🏷 Current Role / Job Title</label>
+              <input type="text" id="cri-role" placeholder="e.g. Frontend Developer, Data Analyst" />
+            </div>
+
+            <!-- Years of Experience -->
+            <div class="risk-field">
+              <label for="cri-years">📅 Years of Experience</label>
+              <input type="number" id="cri-years" placeholder="e.g. 3" min="0" max="40" />
+            </div>
+
+            <!-- Experience Level -->
+            <div class="risk-field">
+              <label for="cri-exp-level">📊 Experience Level</label>
+              <select id="cri-exp-level">
+                <option value="low">Entry Level (0–2 yrs)</option>
+                <option value="mid" selected>Mid Level (2–5 yrs)</option>
+                <option value="senior">Senior Level (5–10 yrs)</option>
+                <option value="lead">Lead / Principal (10+ yrs)</option>
+                <option value="exec">Executive / C-Suite</option>
+              </select>
+            </div>
+
+            <!-- Industry -->
+            <div class="risk-field">
+              <label for="cri-industry">🏭 Industry</label>
+              <select id="cri-industry">
+                <option value="tech">Technology</option>
+                <option value="finance">Finance / Fintech</option>
+                <option value="health">Healthcare</option>
+                <option value="marketing">Marketing</option>
+                <option value="education">Education</option>
+                <option value="design">Design / Creative</option>
+                <option value="data">Data Science / AI</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <!-- Skills -->
+            <div class="risk-field risk-field-wide">
+              <label for="cri-skills">🧬 Current Skills (comma-separated)</label>
+              <input type="text" id="cri-skills" placeholder="e.g. React, JavaScript, Node.js, Docker, Python" />
+            </div>
+
+            <!-- Learning Activity -->
+            <div class="risk-field risk-field-wide">
+              <label for="cri-learning">📚 Learning Activity Frequency</label>
+              <select id="cri-learning">
+                <option value="">— Select frequency —</option>
+                <option value="daily">Daily (45+ min/day)</option>
+                <option value="few times a week">Few Times a Week</option>
+                <option value="monthly">Monthly (few times a month)</option>
+                <option value="rarely">Rarely (once in 2–3 months)</option>
+                <option value="never">Never / Almost Never</option>
+              </select>
+            </div>
+
+            <!-- Career Goal -->
+            <div class="risk-field risk-field-wide">
+              <label for="cri-goal">🎯 Career Goal (Optional)</label>
+              <input type="text" id="cri-goal"
+                placeholder="e.g. Become a Senior Full Stack Engineer at a product company" />
+            </div>
+
           </div>
 
-          <!-- ===== FEEDBACK & RATING CARD ===== -->
-          <div class="result-card" id="feedback-section">
-            <div class="card-header">
-              <div class="card-icon yellow-bg">⭐</div>
-              <div>
-                <h3 data-i18n="feedbackTitle">Rate This Analysis</h3>
-                <p data-i18n="feedbackSubtitle">Help us improve! How accurate was this analysis?</p>
-              </div>
-            </div>
-            <div class="feedback-stats">
-              <span id="feedback-count">0 ratings so far</span>
-              <span id="feedback-avg"></span>
-            </div>
-
-            <div id="feedback-form">
-              <div class="star-row">
-                <button class="star-btn" data-value="1">⭐</button>
-                <button class="star-btn" data-value="2">⭐</button>
-                <button class="star-btn" data-value="3">⭐</button>
-                <button class="star-btn" data-value="4">⭐</button>
-                <button class="star-btn" data-value="5">⭐</button>
-              </div>
-              <textarea class="feedback-textarea" id="feedback-text" data-i18n="feedbackPlaceholder"
-                placeholder="Any comments or suggestions? (optional)"></textarea>
-              <button class="btn-feedback-submit" id="feedback-submit-btn" data-i18n="feedbackSubmit">Submit
-                Feedback</button>
-            </div>
-
-            <div id="feedback-thanks">
-              <div class="thanks-icon">🙏</div>
-              <p data-i18n="feedbackThanks">Thanks for your feedback!</p>
-            </div>
+          <div class="risk-action-bar">
+            <button class="btn-analyze-risk" id="analyze-risk-btn">
+              <span>⚠️</span> Analyze Career Risk
+            </button>
+            <button class="btn-risk-clear" id="risk-clear-btn">🗑 Clear</button>
           </div>
+        </div>
 
-        </div><!-- /.results-grid -->
-      </div><!-- /.main-content -->
-    </section>
+        <!-- Results Output -->
+        <div id="career-risk-result" class="career-risk-result hidden"></div>
+
+      </section>
+
+    </div><!-- /#risk-tool-panel -->
 
     <!-- ===== FOOTER ===== -->
     <footer class="footer">
@@ -553,6 +728,7 @@
   <script src="analyzer.js"></script>
   <script src="ui.js"></script>
   <script src="features.js"></script>
+  <script src="career-risk.js"></script>
   <script src="app.js"></script>
 
 </body>

@@ -15,6 +15,7 @@
         Feedback.init();
         initCustomizePanel();
         initLangToggle();
+        initCareerRisk();
     });
 
     // ---- Bind Events ----
@@ -52,10 +53,11 @@
     function initCustomizePanel() {
         const toggle = document.getElementById('customize-toggle');
         const panel = document.getElementById('customize-panel');
+        const chevron = toggle ? toggle.querySelector('.chevron-toggle') : null;
         if (toggle && panel) {
             toggle.addEventListener('click', () => {
-                panel.classList.toggle('open');
-                toggle.textContent = panel.classList.contains('open') ? '▲ Hide Options' : '🎛 Customize Analysis';
+                const isOpen = panel.classList.toggle('open');
+                if (chevron) chevron.classList.toggle('open', isOpen);
             });
         }
     }
@@ -102,6 +104,7 @@
                 const options = getCustomizeOptions();
                 state.result = ResumeAnalyzer.analyzeMatch(state.resumeText, state.jdText, options);
                 UI.renderResults(state.result);
+                renderTldr(state.result);
                 Feedback.reset();
                 showToast('Analysis complete! 🎉', 'success');
             } catch (err) {
@@ -289,4 +292,257 @@ REQUIREMENTS:
 
     window.AppState = state;
     window.showToast = showToast;
+
+    // ---- TL;DR Quick Summary Renderer ----
+    function renderTldr(result) {
+        const container = document.getElementById('tldr-container');
+        if (!container || !result) return;
+
+        const score = result.score || 0;
+        const scoreColor = score >= 70 ? '#10b981' : score >= 50 ? '#f59e0b' : '#ef4444';
+        const verdict = result.verdict || (score >= 70 ? 'Strong Match' : score >= 50 ? 'Good Potential' : 'Needs Work');
+        const verdictIcon = score >= 70 ? '✅' : score >= 50 ? '⚠️' : '❌';
+
+        const strengths = (result.strengthsWeaknesses?.strengths || []).map(s => s.label);
+        const missing = result.missingSkills || [];
+
+        container.innerHTML = `
+          <div class="tldr-grid">
+            <div class="tldr-score-circle">
+              <div class="tldr-score-num" style="color:${scoreColor}">${score}%</div>
+              <div class="tldr-score-desc">Match Score</div>
+              <div class="tldr-verdict-badge" style="background:${scoreColor}22;color:${scoreColor};border:1px solid ${scoreColor}44">
+                ${verdictIcon} ${verdict}
+              </div>
+            </div>
+            <div>
+              <div class="tldr-section-title">✅ Your Strengths</div>
+              <ul class="tldr-list">
+                ${strengths.slice(0, 3).map(s => `<li data-icon="✓">${s}</li>`).join('') || '<li data-icon="✓">Good resume foundation detected</li>'}
+              </ul>
+            </div>
+            <div>
+              <div class="tldr-section-title">🔥 Key Gaps to Fix</div>
+              <ul class="tldr-list">
+                ${missing.slice(0, 3).map(s => `<li data-icon="+">${ResumeAnalyzer.titleCase(s)}</li>`).join('') || '<li data-icon="+">Check the Skills Gap section below</li>'}
+              </ul>
+            </div>
+          </div>
+        `;
+    }
+
+    // ---- Tool Tab Switcher ----
+    window.switchTool = function (tool) {
+        const matcherPanel = document.getElementById('matcher-tool-panel');
+        const riskPanel = document.getElementById('risk-tool-panel');
+        const matcherBtn = document.getElementById('tab-btn-matcher');
+        const riskBtn = document.getElementById('tab-btn-risk');
+        const stickyBar = document.getElementById('sticky-analyze-bar');
+
+        if (tool === 'matcher') {
+            matcherPanel?.classList.remove('hidden');
+            riskPanel?.classList.add('hidden');
+            matcherBtn?.classList.add('active');
+            riskBtn?.classList.remove('active');
+            stickyBar?.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else {
+            matcherPanel?.classList.add('hidden');
+            riskPanel?.classList.remove('hidden');
+            riskBtn?.classList.add('active');
+            matcherBtn?.classList.remove('active');
+            stickyBar?.classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    // ---- Career Risk Intelligence ----
+    function initCareerRisk() {
+        const analyzeBtn = document.getElementById('analyze-risk-btn');
+        const clearBtn = document.getElementById('risk-clear-btn');
+        if (analyzeBtn) analyzeBtn.addEventListener('click', runCareerRiskAnalysis);
+        if (clearBtn) clearBtn.addEventListener('click', clearCareerRisk);
+    }
+
+    function clearCareerRisk() {
+        ['cri-role', 'cri-years', 'cri-goal', 'cri-skills'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+        ['cri-exp-level', 'cri-learning', 'cri-industry'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.selectedIndex = el.id === 'cri-exp-level' ? 1 : 0;
+        });
+        const result = document.getElementById('career-risk-result');
+        if (result) { result.innerHTML = ''; result.classList.add('hidden'); }
+    }
+
+    function runCareerRiskAnalysis() {
+        const role = (document.getElementById('cri-role') || {}).value || '';
+        const years = (document.getElementById('cri-years') || {}).value || 0;
+        const expLevel = (document.getElementById('cri-exp-level') || {}).value || 'mid';
+        const industry = (document.getElementById('cri-industry') || {}).value || 'tech';
+        const skills = (document.getElementById('cri-skills') || {}).value || '';
+        const learning = (document.getElementById('cri-learning') || {}).value || '';
+        const goal = (document.getElementById('cri-goal') || {}).value || '';
+
+        if (!role.trim()) {
+            showToast('Please enter your current role to analyze risk.', 'warn');
+            return;
+        }
+        if (!skills.trim()) {
+            showToast('Please enter at least a few skills for accurate analysis.', 'warn');
+            return;
+        }
+
+        const analyzeBtn = document.getElementById('analyze-risk-btn');
+        if (analyzeBtn) { analyzeBtn.disabled = true; analyzeBtn.textContent = '⏳ Analyzing...'; }
+
+        setTimeout(() => {
+            const result = CareerRisk.analyze({
+                currentRole: role,
+                yearsOfExperience: parseFloat(years) || 0,
+                experienceLevel: expLevel,
+                industry,
+                skills,
+                learningActivity: learning,
+                careerGoal: goal
+            });
+            renderCareerRiskResult(result);
+            if (analyzeBtn) { analyzeBtn.disabled = false; analyzeBtn.textContent = '⚠️ Analyze Career Risk'; }
+        }, 400);
+    }
+
+    function renderCareerRiskResult(r) {
+        const container = document.getElementById('career-risk-result');
+        if (!container) return;
+
+        const categoryColor = r.riskCategory === 'Safe Zone' ? '#10b981'
+            : r.riskCategory === 'Warning Zone' ? '#f59e0b' : '#ef4444';
+        const categoryIcon = r.riskCategory === 'Safe Zone' ? '✅' : r.riskCategory === 'Warning Zone' ? '⚠️' : '🚨';
+        const scoreColor = r.overallScore <= 35 ? '#10b981' : r.overallScore <= 65 ? '#f59e0b' : '#ef4444';
+        const confColor = r.confidence === 'High' ? '#10b981' : r.confidence === 'Medium' ? '#f59e0b' : '#94a3b8';
+        const automColor = r.automationRisk < 30 ? '#10b981' : r.automationRisk < 60 ? '#f59e0b' : '#ef4444';
+        const salaryIcon = r.salaryGrowth === 'High' ? '📈' : r.salaryGrowth === 'Moderate' ? '📊' : '📉';
+
+        const m = r.modules;
+
+        container.innerHTML = `
+        <!-- BANNER -->
+        <div class="risk-score-banner" style="border-left:4px solid ${scoreColor}">
+          <div class="risk-score-main">
+            <div class="risk-score-num" style="color:${scoreColor}">${r.overallScore}%</div>
+            <div>
+              <div class="risk-score-label">Overall Career Risk Score</div>
+              <div class="risk-category-badge" style="background:${categoryColor}22;color:${categoryColor};border:1px solid ${categoryColor}44">${categoryIcon} ${r.riskCategory}</div>
+            </div>
+          </div>
+          <div class="risk-confidence-box">
+            <span class="risk-conf-label">Prediction Confidence</span>
+            <span class="risk-conf-val" style="color:${confColor}">${r.confidence}</span>
+          </div>
+        </div>
+
+        <!-- 5 MODULE CARDS -->
+        <div class="risk-modules-row">
+          <div class="risk-module-card">
+            <div class="rm-icon">🧠</div>
+            <div class="rm-title">Learning Adaptability</div>
+            <div class="rm-score" style="color:${m.learningAdaptability.score >= 60 ? '#10b981' : m.learningAdaptability.score >= 40 ? '#f59e0b' : '#ef4444'}">${m.learningAdaptability.score}/100</div>
+            <div class="rm-detail">${m.learningAdaptability.reasons[0] || ''}</div>
+          </div>
+          <div class="risk-module-card">
+            <div class="rm-icon">📈</div>
+            <div class="rm-title">Consistency Stability</div>
+            <div class="rm-score" style="color:${m.consistencyStability.level === 'High' ? '#10b981' : m.consistencyStability.level === 'Medium' ? '#f59e0b' : '#ef4444'}">${m.consistencyStability.level}</div>
+            <div class="rm-detail">${m.consistencyStability.analysis}</div>
+          </div>
+          <div class="risk-module-card">
+            <div class="rm-icon">⚗️</div>
+            <div class="rm-title">Skill Relevance Index</div>
+            <div class="rm-score" style="color:${m.skillDecay.relevanceRatio >= 50 ? '#10b981' : m.skillDecay.relevanceRatio >= 25 ? '#f59e0b' : '#ef4444'}">${m.skillDecay.relevanceRatio}% Relevant</div>
+            <div class="rm-detail">${m.skillDecay.verdict}</div>
+          </div>
+          <div class="risk-module-card">
+            <div class="rm-icon">🤖</div>
+            <div class="rm-title">Automation Risk</div>
+            <div class="rm-score" style="color:${automColor}">${r.automationRisk}%</div>
+            <div class="rm-detail">${m.marketMismatch.sustainability}</div>
+          </div>
+          <div class="risk-module-card">
+            <div class="rm-icon">🎯</div>
+            <div class="rm-title">Direction Clarity</div>
+            <div class="rm-score" style="color:${m.directionClarity.clarity === 'Clear' ? '#10b981' : m.directionClarity.clarity === 'Partially Aligned' ? '#f59e0b' : '#ef4444'}">${m.directionClarity.clarity}</div>
+            <div class="rm-detail">${m.directionClarity.assessment}</div>
+          </div>
+        </div>
+
+        <!-- TOP 3 RISK FACTORS -->
+        <div class="risk-section-card">
+          <h4 class="risk-section-title">🔥 Top Risk Factors</h4>
+          ${r.topRiskFactors.length === 0
+                ? '<p class="risk-positive">✅ No major risk factors detected. You are on a great track!</p>'
+                : r.topRiskFactors.map((f, i) => `<div class="risk-factor-item"><span class="risk-factor-num">${i + 1}</span><div><strong>${f.label}</strong><p>${f.detail}</p></div></div>`).join('')
+            }
+        </div>
+
+        <!-- 2-YEAR PROJECTION + SALARY -->
+        <div class="risk-two-col">
+          <div class="risk-section-card">
+            <h4 class="risk-section-title">🔭 2-Year Career Projection</h4>
+            <p class="risk-text">${r.projection}</p>
+          </div>
+          <div class="risk-section-card">
+            <h4 class="risk-section-title">💰 Salary Growth Outlook</h4>
+            <div class="risk-salary-badge">
+              <span class="salary-icon">${salaryIcon}</span>
+              <div>
+                <div class="salary-level">${r.salaryGrowth} Growth Potential</div>
+                <div class="salary-detail">Based on your role, skills, and market demand alignment.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ALT CAREER PATHS -->
+        ${r.altPaths && r.altPaths.length > 0 ? `
+        <div class="risk-section-card">
+          <h4 class="risk-section-title">🛤 Alternative Career Paths</h4>
+          <div class="alt-paths-grid">
+            ${r.altPaths.map(p => `<div class="alt-path-pill">🔀 ${p}</div>`).join('')}
+          </div>
+        </div>` : ''}
+
+        <!-- 6–12 MONTH ROADMAP -->
+        <div class="risk-section-card">
+          <h4 class="risk-section-title">🗺 6–12 Month Recovery Roadmap</h4>
+          <div class="recovery-phases">
+            <div class="recovery-phase">
+              <div class="phase-label phase-1">⚡ Months 1–3</div>
+              <ul class="phase-list">${r.roadmap.months1to3.map(s => `<li>${s}</li>`).join('')}</ul>
+            </div>
+            <div class="recovery-phase">
+              <div class="phase-label phase-2">🌱 Months 3–6</div>
+              <ul class="phase-list">${r.roadmap.months3to6.map(s => `<li>${s}</li>`).join('')}</ul>
+            </div>
+            <div class="recovery-phase">
+              <div class="phase-label phase-3">🌟 Months 6–12</div>
+              <ul class="phase-list">${r.roadmap.months6to12.map(s => `<li>${s}</li>`).join('')}</ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- IMMEDIATE ACTIONS -->
+        <div class="risk-section-card risk-actions-card">
+          <h4 class="risk-section-title">⚡ Immediate Action Steps</h4>
+          <div class="immediate-actions-list">
+            ${r.immediateActions.map((a, i) => `<div class="immediate-action"><span class="action-num">${i + 1}</span><span>${a}</span></div>`).join('')}
+          </div>
+        </div>
+        `;
+
+        container.classList.remove('hidden');
+        setTimeout(() => container.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+    }
+
 })();
